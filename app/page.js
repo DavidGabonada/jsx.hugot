@@ -5,11 +5,13 @@ import { Card, FloatingLabel, Form, Container, Row, Col, Button } from 'react-bo
 import Image from 'next/image';
 import axios from 'axios';
 import { toast } from 'sonner';
+import styles from './AuthPage.module.css';
 
 function AuthPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isSignIn, setIsSignIn] = useState(true);  // State to track whether it's login or sign in
+  const [isSignIn, setIsSignIn] = useState(true);
+
   const router = useRouter();
 
   const handleLogin = async (e) => {
@@ -36,8 +38,7 @@ function AuthPage() {
         toast.success("Login successful");
         localStorage.setItem("user", res.data.user_id);
 
-        // Redirect to the dashboard for all users
-        setTimeout(() => router.push("/appnote"), 500);
+        setTimeout(() => router.push("/dashboard"), 500);
       }
     } catch (error) {
       if (error.response) {
@@ -66,184 +67,69 @@ function AuthPage() {
   return (
     <Container
       fluid
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f8f9fa',
-      }}
+      className={styles.container}
     >
-      <Row className="w-100">
-        {isSignIn ? (
-          <Col
-            md={5}
-            className="d-flex align-items-center justify-content-end p-0"
-          >
-            <Card
-              className="w-100"
-              style={{
-                maxWidth: '400px',
-                height: '400px',
-                borderRadius: '10px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                transition: 'transform 0.5s ease',
-              }}
-            >
-              <Card.Body className="d-flex flex-column align-items-center justify-content-center h-100">
-                <h2 className="text-center mb-4" style={{ color: '#343a40' }}>
-                  Login
-                </h2>
-                <Form style={{ width: '100%' }} onSubmit={handleLogin}>
-                  <FloatingLabel label="Username" className="mb-3">
-                    <Form.Control
-                      type="text"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                      style={{ borderRadius: '5px' }}
-                    />
-                  </FloatingLabel>
+      <Row className={`${styles.row} ${isSignIn ? styles.login : styles.signIn}`}>
+        <Col
+          md={5}
+          className={`${styles.col} ${styles.formCol} ${isSignIn ? styles.showForm : styles.hideForm}`}
+        >
+          <Card className={styles.card}>
+            <Card.Body className={styles.cardBody}>
+              <h2 className={styles.title}>{isSignIn ? "Login" : "Sign In"}</h2>
+              <Form style={{ width: '100%' }} onSubmit={handleLogin}>
+                <FloatingLabel label="Username" className="mb-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="Username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                    style={{ borderRadius: '5px' }}
+                  />
+                </FloatingLabel>
 
-                  <FloatingLabel label="Password" className="mb-3">
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                      style={{ borderRadius: '5px' }}
-                    />
-                  </FloatingLabel>
+                <FloatingLabel label="Password" className="mb-3">
+                  <Form.Control
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
+                    style={{ borderRadius: '5px' }}
+                  />
+                </FloatingLabel>
 
-                  <Button type="submit" className="w-100 mb-3">
-                    Login
-                  </Button>
-                </Form>
-
-                <Button
-                  variant="link"
-                  onClick={handleSwap}
-                  className="w-100 text-center mt-3"
-                >
-                  Sign In
+                <Button type="submit" className="w-100 mb-3">
+                  {isSignIn ? "Login" : "Sign In"}
                 </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        ) : (
-          <Col
-            md={7}
-            className="d-flex align-items-center justify-content-start p-0"
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '400px',
-                overflow: 'hidden',
-                borderRadius: '10px',
-              }}
-            >
-              <Image
-                src="/images/hugot_realizations.png"
-                alt="Hugot Realizations"
-                layout="fill"
-                objectFit="cover"
-                style={{
-                  filter: 'brightness(0.7) contrast(1.2)',
-                  borderRadius: '10px',
-                }}
-              />
-            </div>
-          </Col>
-        )}
+              </Form>
 
-        {isSignIn ? (
-          <Col
-            md={7}
-            className="d-flex align-items-center justify-content-start p-0"
-          >
-            <div
-              style={{
-                position: 'relative',
-                width: '100%',
-                height: '400px',
-                overflow: 'hidden',
-                borderRadius: '10px',
-              }}
-            >
-              <Image
-                src="/images/hugot_realizations.png"
-                alt="Hugot Realizations"
-                layout="fill"
-                objectFit="cover"
-                style={{
-                  filter: 'brightness(0.7) contrast(1.2)',
-                  borderRadius: '10px',
-                }}
-              />
-            </div>
-          </Col>
-        ) : (
-          <Col
-            md={5}
-            className="d-flex align-items-center justify-content-end p-0"
-          >
-            <Card
-              className="w-100"
-              style={{
-                maxWidth: '400px',
-                height: '400px',
-                borderRadius: '10px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                transition: 'transform 0.5s ease',
-              }}
-            >
-              <Card.Body className="d-flex flex-column align-items-center justify-content-center h-100">
-                <h2 className="text-center mb-4" style={{ color: '#343a40' }}>
-                  Sign In
-                </h2>
-                <Form style={{ width: '100%' }} onSubmit={handleLogin}>
-                  <FloatingLabel label="Username" className="mb-3">
-                    <Form.Control
-                      type="text"
-                      placeholder="Username"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                      style={{ borderRadius: '5px' }}
-                    />
-                  </FloatingLabel>
+              <Button
+                variant="link"
+                onClick={handleSwap}
+                className="w-100 text-center mt-3"
+              >
+                {isSignIn ? "Sign In" : "Login"}
+              </Button>
+            </Card.Body>
+          </Card>
+        </Col>
 
-                  <FloatingLabel label="Password" className="mb-3">
-                    <Form.Control
-                      type="password"
-                      placeholder="Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && handleLogin(e)}
-                      style={{ borderRadius: '5px' }}
-                    />
-                  </FloatingLabel>
-
-                  <Button type="submit" className="w-100 mb-3">
-                    Sign In
-                  </Button>
-                </Form>
-
-                <Button
-                  variant="link"
-                  onClick={handleSwap}
-                  className="w-100 text-center mt-3"
-                >
-                  Login
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        )}
+        <Col
+          md={7}
+          className={`${styles.col} ${styles.imageCol} ${isSignIn ? styles.showImage : styles.hideImage}`}
+        >
+          <div className={styles.imageWrapper}>
+            <Image
+              src="/images/hugot_realizations.png"
+              alt="Hugot Realizations"
+              layout="fill"
+              objectFit="cover"
+              className={styles.image}
+            />
+          </div>
+        </Col>
       </Row>
     </Container>
   );
